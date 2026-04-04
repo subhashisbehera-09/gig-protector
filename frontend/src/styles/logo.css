@@ -1,0 +1,200 @@
+/* Logo Styles */
+
+/* Base Logo Styles */
+.logo-svg {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.logo-svg:hover {
+  transform: scale(1.05) rotate(2deg);
+}
+
+/* Animated Logo */
+.logo-animated .logo-shield {
+  animation: logo-pulse 3s ease-in-out infinite;
+}
+
+.logo-animated .logo-ring {
+  animation: logo-rotate 10s linear infinite;
+  transform-origin: center;
+}
+
+.logo-animated .logo-check {
+  animation: logo-check-bounce 2s ease-in-out infinite;
+}
+
+.logo-animated .logo-check-bg {
+  animation: logo-check-pulse 2s ease-in-out infinite;
+}
+
+.logo-animated .logo-icon {
+  animation: logo-icon-float 3s ease-in-out infinite;
+}
+
+/* Keyframe Animations */
+@keyframes logo-pulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes logo-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes logo-check-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes logo-check-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes logo-icon-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Logo Ring Effect */
+.logo-ring-effect {
+  pointer-events: none;
+}
+
+/* Logo With Text Container */
+.logo-with-text {
+  transition: all 0.3s ease;
+}
+
+.logo-with-text:hover {
+  transform: translateX(5px);
+}
+
+.logo-with-text:hover .logo-svg {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Logo Sizes */
+.logo-xs { width: 24px; height: 24px; }
+.logo-sm { width: 32px; height: 32px; }
+.logo-md { width: 48px; height: 48px; }
+.logo-lg { width: 64px; height: 64px; }
+.logo-xl { width: 96px; height: 96px; }
+.logo-2xl { width: 120px; height: 120px; }
+
+/* Navbar Logo Specific */
+.nav-logo .logo-svg {
+  filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.5))
+          drop-shadow(0 0 30px rgba(16, 185, 129, 0.3));
+  transition: all 0.3s ease;
+}
+
+.nav-logo:hover .logo-svg {
+  filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.7))
+          drop-shadow(0 0 40px rgba(16, 185, 129, 0.5));
+  transform: rotate(5deg) scale(1.1);
+}
+
+/* Home Header Logo */
+.home-logo .logo-svg {
+  transition: transform 0.3s ease;
+}
+
+.home-logo:hover .logo-svg {
+  transform: rotate(10deg) scale(1.1);
+}
+
+/* Footer Logo */
+.footer-brand .logo-svg {
+  filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.3));
+}
+
+/* Loading/Splash Screen Logo */
+.logo-animated-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Glow Effects */
+.logo-glow {
+  filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.6))
+          drop-shadow(0 0 40px rgba(16, 185, 129, 0.4));
+}
+
+.logo-glow-intense {
+  filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.8))
+          drop-shadow(0 0 60px rgba(16, 185, 129, 0.5))
+          drop-shadow(0 0 90px rgba(139, 92, 246, 0.3));
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .logo-svg {
+  filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.4))
+          drop-shadow(0 0 40px rgba(16, 185, 129, 0.3));
+}
+
+/* Light mode adjustments */
+[data-theme="light"] .logo-svg {
+  filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.3))
+          drop-shadow(0 0 20px rgba(16, 185, 129, 0.2));
+}
+
+/* Logo Placeholder (while loading) */
+.logo-placeholder {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(16, 185, 129, 0.2));
+  border-radius: 20%;
+  animation: logo-placeholder-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes logo-placeholder-pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .logo-with-text span {
+    font-size: 1.1rem !important;
+  }
+
+  .logo-with-text span:last-child {
+    display: none;
+  }
+}

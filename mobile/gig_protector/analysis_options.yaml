@@ -1,0 +1,8 @@
+{
+  "commentary": "Creating a Flutter mobile app for GigProtector - an income protection insurance app for gig workers. The app includes worker registration, policy management, premium calculator, claims processing, trigger monitoring, and a dashboard. I'll create a comprehensive Flutter project with Provider state management, dark theme matching the web app, and all 6 main screens.",
+  "title": "GigProtector Mobile",
+  "description": "Flutter mobile app for gig worker income protection insurance with registration, policy, claims, and trigger monitoring.",
+  "additional_dependencies": ["provider", "http", "shared_preferences"],
+  "category": "mobile",
+  "platforms": ["android", "ios"]
+}

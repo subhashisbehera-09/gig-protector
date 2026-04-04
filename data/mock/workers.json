@@ -1,0 +1,116 @@
+{
+  "workers": [
+    {
+      "id": "GIG-MUM-2024-7842",
+      "name": "Rahul Patil",
+      "phone": "+91 98765 43210",
+      "aadhaar_last4": "1234",
+      "dob": "1996-03-15",
+      "platform": "zomato",
+      "platform_id": "ZOM-MUM-284756",
+      "city": "mumbai",
+      "zone": "andheri_west",
+      "weekly_earnings": 4500,
+      "daily_baseline": 750,
+      "working_hours": 8,
+      "tenure_months": 14,
+      "consistency_score": 91,
+      "kyc_status": {
+        "aadhaar": "verified",
+        "mobile": "verified",
+        "bank": "linked"
+      },
+      "upi_id": "rahulpatil@okicici",
+      "registration_date": "2023-01-15",
+      "total_paid_out": 8450,
+      "claims_count": 6,
+      "current_policy": {
+        "tier": "standard",
+        "premium_weekly": 91,
+        "coverage_percent": 75,
+        "status": "active",
+        "next_debit": "2024-04-08"
+      },
+      "risk_profile": {
+        "zone_flood_risk": 0.72,
+        "earnings_volatility": 0.12,
+        "loyalty_discount": 0.05
+      }
+    },
+    {
+      "id": "GIG-DEL-2024-3156",
+      "name": "Priya Sharma",
+      "phone": "+91 99887 76655",
+      "aadhaar_last4": "5678",
+      "dob": "1992-07-22",
+      "platform": "swiggy",
+      "platform_id": "SWG-DEL-189234",
+      "city": "delhi",
+      "zone": "connaught_place",
+      "weekly_earnings": 5200,
+      "daily_baseline": 867,
+      "working_hours": 10,
+      "tenure_months": 24,
+      "consistency_score": 94,
+      "kyc_status": {
+        "aadhaar": "verified",
+        "mobile": "verified",
+        "bank": "linked"
+      },
+      "upi_id": "priyasharma@oksbi",
+      "registration_date": "2022-04-10",
+      "total_paid_out": 12300,
+      "claims_count": 8,
+      "current_policy": {
+        "tier": "premium",
+        "premium_weekly": 108,
+        "coverage_percent": 90,
+        "status": "active",
+        "next_debit": "2024-04-08"
+      },
+      "risk_profile": {
+        "zone_flood_risk": 0.08,
+        "pollution_risk": 0.65,
+        "earnings_volatility": 0.08,
+        "loyalty_discount": 0.1
+      }
+    },
+    {
+      "id": "GIG-BLR-2024-9087",
+      "name": "Kiran Kumar",
+      "phone": "+91 94567 82341",
+      "aadhaar_last4": "9012",
+      "dob": "1990-11-08",
+      "platform": "amazon",
+      "platform_id": "AFX-BLR-567123",
+      "city": "bengaluru",
+      "zone": "whitefield",
+      "weekly_earnings": 6800,
+      "daily_baseline": 1133,
+      "working_hours": 10,
+      "tenure_months": 8,
+      "consistency_score": 82,
+      "kyc_status": {
+        "aadhaar": "verified",
+        "mobile": "verified",
+        "bank": "linked"
+      },
+      "upi_id": "kirankumar@okhdfc",
+      "registration_date": "2023-08-20",
+      "total_paid_out": 5200,
+      "claims_count": 4,
+      "current_policy": {
+        "tier": "standard",
+        "premium_weekly": 95,
+        "coverage_percent": 75,
+        "status": "active",
+        "next_debit": "2024-04-08"
+      },
+      "risk_profile": {
+        "zone_flood_risk": 0.38,
+        "earnings_volatility": 0.18,
+        "loyalty_discount": 0.0
+      }
+    }
+  ]
+}

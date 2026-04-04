@@ -1,0 +1,226 @@
+{
+  "claims": [
+    {
+      "id": "CLM-0041",
+      "worker_id": "GIG-MUM-2024-7842",
+      "trigger_id": "WE001",
+      "trigger_type": "heavy_rain",
+      "trigger_name": "Heavy Rainfall — IMD Red Alert",
+      "city": "mumbai",
+      "zone": "andheri_west",
+      "days_affected": 3,
+      "payout_amount": 1575,
+      "coverage_percent": 75,
+      "daily_baseline": 700,
+      "claim_date": "2024-03-15T09:30:00",
+      "processed_date": "2024-03-15T09:35:00",
+      "status": "paid",
+      "fraud_score": 18,
+      "route": "green",
+      "validation_results": {
+        "gps_confirmed": true,
+        "cell_tower_delta_km": 0.8,
+        "platform_activity_checked": true,
+        "activity_anomaly": false
+      },
+      "upi_transfer": {
+        "transaction_id": "UPI-2024-03150935-7842",
+        "credited_to": "rahulpatil@okicici",
+        "credited_at": "2024-03-15T09:34:42"
+      }
+    },
+    {
+      "id": "CLM-0038",
+      "worker_id": "GIG-MUM-2024-7842",
+      "trigger_id": "WE005",
+      "trigger_type": "dense_fog",
+      "trigger_name": "Dense Fog — Visibility 120m",
+      "city": "mumbai",
+      "zone": "andheri_west",
+      "days_affected": 1,
+      "payout_amount": 525,
+      "coverage_percent": 75,
+      "daily_baseline": 700,
+      "claim_date": "2024-02-28T06:15:00",
+      "processed_date": "2024-02-28T06:19:00",
+      "status": "paid",
+      "fraud_score": 12,
+      "route": "green",
+      "validation_results": {
+        "gps_confirmed": true,
+        "cell_tower_delta_km": 0.5,
+        "platform_activity_checked": true,
+        "activity_anomaly": false
+      },
+      "upi_transfer": {
+        "transaction_id": "UPI-2024-02280615-7842",
+        "credited_to": "rahulpatil@okicici",
+        "credited_at": "2024-02-28T06:18:32"
+      }
+    },
+    {
+      "id": "CLM-0035",
+      "worker_id": "GIG-MUM-2024-7842",
+      "trigger_id": "WE003",
+      "trigger_type": "civic_disruption",
+      "trigger_name": "Unplanned Bandh — Zone Closure",
+      "city": "bengaluru",
+      "zone": "mg_road_bengaluru",
+      "days_affected": 2,
+      "payout_amount": 1050,
+      "coverage_percent": 75,
+      "daily_baseline": 700,
+      "claim_date": "2024-02-10T10:00:00",
+      "processed_date": "2024-02-10T10:05:00",
+      "status": "paid",
+      "fraud_score": 22,
+      "route": "green",
+      "validation_results": {
+        "gps_confirmed": true,
+        "cell_tower_delta_km": 1.2,
+        "platform_activity_checked": true,
+        "activity_anomaly": false
+      },
+      "upi_transfer": {
+        "transaction_id": "UPI-2024-02101000-7842",
+        "credited_to": "rahulpatil@okicici",
+        "credited_at": "2024-02-10T10:04:28"
+      }
+    },
+    {
+      "id": "CLM-0031",
+      "worker_id": "GIG-MUM-2024-7842",
+      "trigger_id": "WE004",
+      "trigger_type": "extreme_heat",
+      "trigger_name": "Extreme Heat 45C",
+      "city": "hyderabad",
+      "zone": "jubilee_hills",
+      "days_affected": 2,
+      "payout_amount": 1050,
+      "coverage_percent": 75,
+      "daily_baseline": 700,
+      "claim_date": "2023-05-22T14:00:00",
+      "processed_date": "2023-05-22T14:06:00",
+      "status": "paid",
+      "fraud_score": 31,
+      "route": "green",
+      "validation_results": {
+        "gps_confirmed": true,
+        "cell_tower_delta_km": 0.3,
+        "platform_activity_checked": true,
+        "activity_anomaly": false
+      },
+      "upi_transfer": {
+        "transaction_id": "UPI-2023-05221400-7842",
+        "credited_to": "rahulpatil@okicici",
+        "credited_at": "2023-05-22T14:05:15"
+      }
+    },
+    {
+      "id": "CLM-0028",
+      "worker_id": "GIG-DEL-2024-3156",
+      "trigger_id": "WE001",
+      "trigger_type": "heavy_rain",
+      "trigger_name": "Heavy Rain — IMD Red Alert",
+      "city": "mumbai",
+      "zone": "andheri_west",
+      "days_affected": 4,
+      "payout_amount": 2100,
+      "coverage_percent": 75,
+      "daily_baseline": 700,
+      "claim_date": "2023-07-04T08:00:00",
+      "processed_date": "2023-07-04T08:08:00",
+      "status": "paid",
+      "fraud_score": 44,
+      "route": "amber",
+      "validation_results": {
+        "gps_confirmed": true,
+        "cell_tower_delta_km": 2.1,
+        "platform_activity_checked": true,
+        "activity_anomaly": true,
+        "weather_discount_applied": true
+      },
+      "upi_transfer": {
+        "transaction_id": "UPI-2023-07040800-3156",
+        "credited_to": "priyasharma@oksbi",
+        "credited_at": "2023-07-04T08:07:45"
+      }
+    },
+    {
+      "id": "CLM-0022",
+      "worker_id": "GIG-DEL-2024-3156",
+      "trigger_id": "WE002",
+      "trigger_type": "air_pollution",
+      "trigger_name": "Severe AQI — GRAP IV",
+      "city": "delhi",
+      "zone": "connaught_place",
+      "days_affected": 3,
+      "payout_amount": 1575,
+      "coverage_percent": 90,
+      "daily_baseline": 867,
+      "claim_date": "2023-11-03T07:00:00",
+      "processed_date": "2023-11-03T07:05:00",
+      "status": "paid",
+      "fraud_score": 19,
+      "route": "green",
+      "validation_results": {
+        "gps_confirmed": true,
+        "cell_tower_delta_km": 0.6,
+        "platform_activity_checked": true,
+        "activity_anomaly": false
+      },
+      "upi_transfer": {
+        "transaction_id": "UPI-2023-11030700-3156",
+        "credited_to": "priyasharma@oksbi",
+        "credited_at": "2023-11-03T07:04:32"
+      }
+    }
+  ],
+  "trigger_thresholds": [
+    {
+      "id": "rain",
+      "name": "Heavy Rainfall / Flood",
+      "icon": "heavy_rain",
+      "threshold": "> 64.5mm/24h",
+      "unit": "mm",
+      "api_source": "OpenWeatherMap + IMD",
+      "confidence_weight": 0.4
+    },
+    {
+      "id": "aqi",
+      "name": "Severe Air Pollution",
+      "icon": "air_pollution",
+      "threshold": "AQI > 400 + GRAP Stage IV",
+      "unit": "aqi",
+      "api_source": "CPCB Safar + OpenAQ",
+      "confidence_weight": 0.35
+    },
+    {
+      "id": "bandh",
+      "name": "Civic Disruption / Bandh",
+      "icon": "civic",
+      "threshold": "Zone orders < 15% for 4+ hrs",
+      "unit": "percent",
+      "api_source": "Traffic API + News NLP",
+      "confidence_weight": 0.3
+    },
+    {
+      "id": "heat",
+      "name": "Extreme Heat Wave",
+      "icon": "extreme_heat",
+      "threshold": "> 44C for 2+ consecutive days",
+      "unit": "celsius",
+      "api_source": "OpenWeatherMap + IMD Heat Wave",
+      "confidence_weight": 0.35
+    },
+    {
+      "id": "fog",
+      "name": "Dense Fog / Zero Visibility",
+      "icon": "dense_fog",
+      "threshold": "Visibility < 200m for 4+ hrs",
+      "unit": "meters",
+      "api_source": "OpenWeatherMap + METAR",
+      "confidence_weight": 0.3
+    }
+  ]
+}

@@ -22,17 +22,19 @@
 3. [Personas & Workflows](#-3-personas--workflows)
 4. [Weekly Premium Model](#-4-weekly-premium-model)
 5. [Parametric Triggers](#-5-parametric-triggers)
-6. [Platform Choice](#-6-platform-choice)
-7. [AI/ML Plan](#-7-aiml-plan)
-8. [Adversarial Defense](#-8-adversarial-defense--anti-spoofing)
-9. [Architecture](#-9-architecture)
-10. [Tech Stack](#-10-tech-stack)
-11. [Project Structure](#-11-project-structure)
-12. [Development Plan](#-12-development-plan)
-13. [API Reference](#-13-api-reference)
-14. [Running the Project](#-14-running-the-project)
-15. [Environment Variables](#-15-environment-variables)
-16. [Roadmap](#-16-roadmap)
+6. [Admin & Worker Dashboards](#-6-admin--worker-dashboards)
+7. [Emergency SOS System](#-7-emergency-sos-system)
+8. [Instant Payout System](#-8-instant-payout-system)
+9. [AI/ML Plan](#-9-aiml-plan)
+10. [Adversarial Defense](#-10-adversarial-defense--anti-spoofing)
+11. [Architecture](#-11-architecture)
+12. [Tech Stack](#-12-tech-stack)
+13. [Project Structure](#-13-project-structure)
+14. [Development Plan](#-14-development-plan)
+15. [API Reference](#-15-api-reference)
+16. [Running the Project](#-16-running-the-project)
+17. [Environment Variables](#-17-environment-variables)
+18. [Roadmap](#-18-roadmap)
 
 ---
 
@@ -79,7 +81,8 @@ gig-protector: Event → Threshold crossed  → Auto-verify → Payout (2–4 ho
 7:04 AM → Rahul's GPS in zone ✓ · 0 trips despite app open ✓ · Cell tower match ✓
 7:06 AM → Fraud score: 18/100 → 🟢 Green
 7:08 AM → Auto-claim: 75% × ₹700 baseline = ₹525/day
-9:30 AM → ₹525 credited to UPI. Notification in Marathi.
+7:10 AM → Instant payout via UPI: ₹525 credited in seconds
+7:30 AM → Notification in Marathi.
 Day 2–3 → Repeats automatically. Total: ₹1,575 over 3 days.
 ```
 
@@ -90,7 +93,7 @@ Day 2–3 → Repeats automatically. Total: ₹1,575 over 3 days.
 6:00 AM → NLP monitor detects "Karnataka bandh" on 3+ news sources
 6:15 AM → Traffic API: near-zero movement. Zone orders at 8% of normal (<15% threshold)
 6:22 AM → Fraud score: 12/100 → 🟢 Green
-6:24 AM → Auto-claim: 90% × ₹600 = ₹540 credited. SMS in Kannada.
+6:24 AM → Auto-claim: 90% × ₹600 = ₹540 credited. Instant payout in seconds.
 ```
 
 ### Persona C — Arjun | Amazon Flex | Delhi NCR
@@ -99,7 +102,7 @@ Day 2–3 → Repeats automatically. Total: ₹1,575 over 3 days.
 ```
 6:00 AM → CPCB Safar: AQI 456 Severe+ ✓ · GRAP Stage IV active ✓
 6:08 AM → Fraud score: 22/100 → 🟢 Green
-6:10 AM → Auto-claim: 60% × ₹466 = ₹280/day credited. SMS in Hindi.
+6:10 AM → Auto-claim: 60% × ₹466 = ₹280/day credited via UPI
 Day 2–4 → Auto-repeats. Total: ₹1,120 over 4 days. Zero action from Arjun.
 ```
 
@@ -107,7 +110,7 @@ Day 2–4 → Auto-repeats. Total: ₹1,120 over 4 days. Zero action from Arjun.
 ```
 ONBOARD         → COVERAGE LIVE      → DISRUPTION        → PAYOUT
 Register + KYC  → Monitor 15+ feeds  → Threshold crossed  → % baseline × days
-Link platform   → Worker earns       → Location validated → UPI credit 2–4hrs
+Link platform   → Worker earns       → Location validated → UPI instant credit
 Choose tier     → AI updates zone    → Fraud scored       → Push + SMS alert
 Pay ₹/week      → risk weekly        → Routed Green/Amber/Red → Auto-continues
 ```
@@ -185,75 +188,116 @@ Score = (API Data Quality × 0.4) + (Zone Match × 0.3) + (Worker Activity × 0.
 < 50  → Trigger not confirmed
 ```
 
----
-
-## 📱 6. Platform Choice — Web vs. Mobile
-
-### Decision: Mobile App (Flutter) for Workers + Web Dashboard (React) for Admin
-
-This is not a default choice. Every aspect is driven by who the user actually is.
+### Automated Trigger Monitoring
+- Scheduler runs every 15 minutes to check all weather/AQI thresholds
+- Auto-claim service automatically creates claims when triggers are confirmed
+- Workers receive instant notifications when coverage is activated
 
 ---
 
-### Why Mobile (Flutter) — Worker-Facing App
+## 📊 6. Admin & Worker Dashboards
 
-Gig delivery workers are a **smartphone-only demographic**. Their phone is simultaneously their GPS device, order management terminal, payment receiver, and communication tool. They have no laptops, no home desktops, and no habit of using web browsers for work tasks.
+### Worker Dashboard
+Real-time view of earnings protection status:
 
-| Factor | Evidence | Decision |
-|---|---|---|
-| **Device reality** | 100% of active gig workers own a smartphone; effectively 0% own a laptop | Mobile is the only viable channel |
-| **No desktop habit** | Workers manage their entire work life — orders, earnings, navigation — through apps | A web portal would have near-zero adoption |
-| **UPI payments** | Premium auto-debit (UPI AutoPay mandate) and payout credit are natively mobile-first | Flutter + `uni_links` for UPI deep link integration |
-| **Push notifications** | Trigger alerts ("disruption active in your zone") and payout confirmations must be instant | Firebase Cloud Messaging — requires a native app |
-| **Offline-first** | Network degrades in the exact zones that trigger payouts (floods, storms) — app must work offline | Hive local DB + `connectivity_plus` for offline queue |
-| **6 Indian languages** | Workers operate in Hindi, Marathi, Kannada, Tamil, Telugu, Bengali — not English | `flutter_localizations` built into Flutter natively |
-| **Sensor access** | Anti-spoof detection needs accelerometer, GPS, cell tower, Wi-Fi probe data simultaneously | `sensors_plus` + `geolocator` — first-class Flutter APIs |
-| **Budget Android performance** | Typical delivery partner phone costs ₹6,000–₹12,000 | Flutter compiles to native ARM — no JS bridge lag |
+| Feature | Description |
+|---|---|
+| Earnings Protection | Monthly/total earnings tracked with protection rate |
+| Coverage Status | Active plan, coverage amount, days remaining, next debit date |
+| Claim History | Timeline of all claims with status and amounts |
+| Quick Stats | Total protected, protection rate, recent claims count |
 
-**Why Flutter over React Native on budget Android:**
-React Native runs JavaScript through a bridge to native modules. On low-RAM budget Android devices (2–3GB RAM), this bridge introduces stuttering. Flutter compiles Dart directly to native ARM code — the same ₹8,000 phone that jitters on React Native runs Flutter at 60fps. For a fraud detection SDK that needs continuous sensor polling, this reliability difference is critical.
+### Admin Dashboard
+Comprehensive analytics for operations teams:
 
----
+| Feature | Description |
+|---|---|
+| Loss Ratio | Total premiums vs payouts with health status |
+| Claim Predictions | ML-predicted claims for next 7 days by zone |
+| Weather Forecast | Disruption probability by city with recommended actions |
+| Fraud Analysis | Unresolved alerts, risk scores, alert breakdown |
+| Executive Summary | Total exposure, risk rating, action items |
 
-### Why React 18 — Admin / Partner Web Dashboard
-
-The React dashboard is **not** for gig workers. It serves an entirely different user:
-
-| User | Task | Why Web |
-|---|---|---|
-| Insurance ops team | Claim review queue, fraud ring investigation | Multi-tab workflows, keyboard shortcuts, large screen data tables |
-| Platform partners (Zomato/Swiggy) | Coverage stats for their partner fleet | Embedded iframe in existing partner portals |
-| IRDAI regulators | Compliance dashboards, audit trail export | Desktop-first regulatory workflow |
-| Data science team | ML model monitoring, trigger backtesting, A/B results | Complex chart interactions impractical on mobile |
-
-These users sit at desks, work across multiple monitors, and need the kind of dense information layout that is impossible on a 6-inch screen. Building this as a mobile app would actively harm their productivity.
-
-**Why React over alternatives:**
-- Vite build tooling gives sub-1s hot reload for rapid dashboard iteration
-- shadcn/ui + Tailwind CSS gives production-quality UI without a design system from scratch
-- Zustand is lightweight enough to not add complexity for a dashboard that doesn't need global state at scale
-- Leaflet.js integrates cleanly with React for the live zone disruption map
+### Admin Pages
+- **Dashboard** — Overview with KPIs and charts
+- **Claims** — Claim management with approval/rejection workflow
+- **Fraud** — Fraud detection alerts and ring investigation
+- **Reports** — Analytics and reporting tools
+- **Safety** — Worker safety incidents and emergency tracking
 
 ---
 
-### Summary
+## 🚨 7. Emergency SOS System
 
+Worker safety feature for emergency situations during deliveries:
+
+### Emergency Triggers
+- **DOG_BITE** — Animal attack or dog chase
+- **ASSAULT** — Physical assault or threat
+- **ACCIDENT** — Vehicle or road accident
+- **HARASSMENT** — Customer or public harassment
+- **MEDICAL** — Medical emergency
+- **OTHER** — Other safety concerns
+
+### State Machine
 ```
-WHO          PLATFORM     WHY
-───────────────────────────────────────────────────────────────
-Gig worker   Flutter app  Smartphone-only · UPI · offline · sensors · vernacular
-Ops/Admin    React web    Desktop workflows · data viz · multi-tab · partner embed
+IDLE → TRIGGERED → ACKNOWLEDGED → ESCALATED → RESOLVED
+                  ↓
+               ABORTED (worker cancels within 10s)
 ```
 
-> A single "responsive web app" serving both audiences would fail both.
-> The worker needs offline capability, push notifications, and UPI deep links
-> that a PWA cannot reliably deliver on budget Android. The admin needs dense
-> data tables and multi-window workflows that a mobile UI cannot support.
-> Two platforms, two audiences, zero compromise.
+### Features
+- One-tap SOS activation from worker app
+- GPS location capture with accuracy metadata
+- Optional customer info capture for incident context
+- Live audio/video streaming capability
+- Background notifications to emergency contacts
+- State transitions with agent assignment and notes
+- 10-second abort window for accidental triggers
+
+### API Endpoints
+```
+POST /emergency/trigger       — Worker initiates emergency
+GET  /emergency/{id}         — Get incident details
+GET  /emergency/             — List incidents with filters
+PATCH /emergency/{id}/status — Update incident state
+POST /emergency/{id}/stream  — Start live stream
+POST /emergency/{id}/cancel  — Worker cancels emergency
+```
 
 ---
 
-## 🤖 7. AI/ML Plan
+## 💸 8. Instant Payout System
+
+Fast payment processing with multiple gateway support:
+
+### Supported Gateways
+| Gateway | Processing Time | Limit |
+|---|---|---|
+| UPI Instant | < 10 seconds | ₹1 - ₹1,00,000 |
+| Razorpay | < 30 seconds | ₹100 - ₹5,00,000 |
+| Stripe | < 60 seconds | ₹100 - ₹10,00,000 |
+
+### Features
+- Instant payout initiation for approved claims
+- Multiple payment gateway support with fallback
+- Transaction verification and reference tracking
+- Payout history with status tracking
+- Demo mode for testing
+- Payment options discovery endpoint
+
+### API Endpoints
+```
+POST /payouts/instant        — Initiate instant payout
+GET  /payouts/options        — Get available payment options
+GET  /payouts/status/{id}    — Check payout status
+GET  /payouts/history        — Get payout history
+POST /payouts/simulate-failure — Simulate failed payout (admin)
+```
+
+---
+
+## 🤖 9. AI/ML Plan
 
 ### Four Layers
 
@@ -264,46 +308,28 @@ Ops/Admin    React web    Desktop workflows · data viz · multi-tab · partner 
 | Fraud Detection | Isolation Forest + NetworkX graph | 18 behavioral + network features | Fraud score 0–100 | Weekly |
 | Claim Review | Llama 3 8B (Ollama, local) | Full claim evidence package | APPROVE / INVESTIGATE / DENY | On feedback |
 
-### Layer 1 — Premium (XGBoost) Features
-`zone_disruption_freq_5yr` · `zone_disruption_severity_avg` · `seasonal_risk_month` · `worker_earnings_cv` · `worker_platform_tenure_days` · `city_tier` · `zone_flood_risk_class` · `zone_pollution_sink_score` · `zone_heat_island_score` · `coverage_tier` · `weather_14d_disruption_prob` · `worker_loyalty_quarters` + 2 more
+### Analytics Service
+Comprehensive analytics for workers and insurers:
 
-### Layer 3 — Fraud (Isolation Forest) Features
-```python
-FRAUD_FEATURES = [
-    "gps_cell_tower_delta_km",           # GPS vs cell tower divergence
-    "location_jump_velocity_kmh",         # Impossible travel speed
-    "zone_entry_trajectory_naturalness",  # 0=teleport, 1=natural travel
-    "wifi_probe_zone_match_score",        # Wi-Fi APs match zone landscape
-    "platform_app_open_hours",            # App open during trigger window
-    "trips_completed_trigger_window",     # Should be ~0 for genuine claim
-    "earnings_other_platforms_during",    # Earning elsewhere while claiming loss
-    "worker_zone_history_days",           # Days of history in this zone
-    "behavioral_baseline_similarity",     # vs 90-day baseline
-    "peer_cohort_behavior_match",         # vs other workers in same zone
-    "days_since_registration",            # New user + immediate claim
-    "kyc_verification_score",             # Identity completeness
-    "network_quality_score",              # Weather leniency adjustment
-    "sensor_data_coherence_score",        # Accelerometer + GPS coherence
-    # + 4 more
-]
-```
+**Worker Analytics:**
+- Earnings protection summary
+- Weekly coverage status
+- Claim history with timeline
 
-### Layer 3 — Ring Detection (NetworkX Graph)
-Device fingerprint clustering · IP address graph · temporal claim burst (Poisson outlier) · UPI destination overlap · Platform ID cross-reference · referral cohort clustering
-
-**Ring flag:** ≥3 edges to flagged nodes → auto-escalate to Red regardless of individual score.
-
-### Layer 4 — LLM Reviewer (Llama 3 8B, local Ollama)
-Generates plain-language evidence summary + APPROVE/INVESTIGATE/DENY recommendation for human reviewers. Reduces review time 45 min → ~8 min. No data leaves the system.
+**Insurer Analytics:**
+- Loss ratio calculation
+- Next-week claim predictions by zone
+- Weather disruption forecast
+- Fraud analysis summary
 
 ---
 
-## 🛡️ 8. Adversarial Defense & Anti-Spoofing
+## 🛡️ 10. Adversarial Defense & Anti-Spoofing
 
 > **The attack:** Fake GPS location to an active trigger zone → collect payout for income never lost.
 > **The defense:** A multi-signal fingerprint that is incoherent to fake across all streams simultaneously.
 
-### 8.1 Genuine Worker vs. GPS Spoofer
+### 10.1 Genuine Worker vs. GPS Spoofer
 
 | Signal | Genuine Worker | Spoofer (Detectable) |
 |---|---|---|
@@ -317,7 +343,7 @@ Generates plain-language evidence summary + APPROVE/INVESTIGATE/DENY recommendat
 | Peer cohort | Zone peers show same pattern | Isolated — doesn't match 20+ peer baseline |
 
 **Key defense — GPS/Cell Tower Delta Check:**
-Cell tower triangulation is entirely independent of GPS hardware. A >5km divergence between GPS fix and cell tower location = high-confidence spoof flag. Cannot be defeated without physical presence.
+Cell tower triangulation is entirely independent of GPS hardware. A >5km divergence between GPS fix and cell tower location = high-confidence spoof flag.
 
 ```
 GPS:          Koramangala (12.9352°N, 77.6245°E)
@@ -325,7 +351,7 @@ Cell towers:  Whitefield  (12.9698°N, 77.7499°E)
 Delta: 14.2km → 🚩 SPOOF FLAG → Amber/Red routing
 ```
 
-### 8.2 Fraud Ring Detection — Data Beyond GPS
+### 10.2 Fraud Ring Detection — Data Beyond GPS
 
 | Data Point | Catches |
 |---|---|
@@ -337,63 +363,53 @@ Delta: 14.2km → 🚩 SPOOF FLAG → Amber/Red routing
 | Referral cohort clustering | Ring recruits registered same week + immediate claim |
 | Behavioral history depth | Ring recruits have no zone history; real workers have months |
 
-### 8.3 Three-Pathway Routing — No Penalty for Honest Workers
+### 10.3 Three-Pathway Routing
 
 ```
 🟢 GREEN  (Score 0–35)   → Auto-payout in 2–4hrs. Zero worker action. ~72% of claims.
-
-🟡 AMBER  (Score 36–65)  → 24hr soft hold. System auto-retries peer + activity checks.
-                            If resolved → Green. If not → human review queue.
-                            Worker sees: "Verifying your claim. Expected by [time]."
-                            No action required. ~22% of claims.
-
-🔴 RED    (Score 66+)    → Human review + LLM recommendation.
-                            Worker action: ONE tap to confirm location. No forms. No calls.
-                            ~6% of claims.
+🟡 AMBER  (Score 36–65)  → 24hr soft hold. System auto-retries. ~22% of claims.
+🔴 RED    (Score 66+)    → Human review + LLM recommendation. ~6% of claims.
 ```
 
-### 8.4 The Network Drop Problem
+### 10.4 Network Drop Protection
 
-Bad weather degrades the network in the same zones that trigger payouts. Four protections:
-
-1. **Weather Network Discount** — degraded signal in a trigger zone lowers fraud threshold by 15–20pts automatically
-2. **Peer Validation** — 60%+ of zone workers showing degraded data = real event, zone-wide leniency applied
-3. **Behavioral Anchor** — 90-day pre-event history absorbs single-day data gaps
-4. **Hard policy rule:**
-```
-IF trigger_confirmed AND zone_match AND history_days ≥ 30
-AND gap_reason = "weather_network_degradation"
-→ APPROVE regardless of sensor completeness
-```
-
-**Appeals:** Denied claims appealable in 7 days — voice description (6 languages) + optional photo → human review in 48hrs → outcome fed back into model retraining.
+Bad weather degrades the network in the same zones that trigger payouts:
+- **Weather Network Discount** — 15–20pt threshold reduction
+- **Peer Validation** — 60%+ zone workers = real event
+- **Behavioral Anchor** — 90-day pre-event history
 
 ---
 
-## 🏗️ 9. Architecture
+## 🏗️ 11. Architecture
 
 ```
-┌──────────────────────────────┬──────────────────────────────────────┐
-│  FLUTTER APP (Workers)       │  REACT DASHBOARD (Admin/Partners)    │
-│  Onboarding · UPI · Alerts   │  Trigger map · Claims · Fraud · ML   │
-└──────────────┬───────────────┴──────────────────────────────────────┘
+┌────────────────────────────────┬──────────────────────────────────────────────┐
+│  FLUTTER APP (Workers)         │  REACT DASHBOARD (Admin/Partners)          │
+│  Onboarding · UPI · SOS · Alerts│  Dashboard · Claims · Fraud · Reports      │
+└──────────────┬─────────────────┴────────────────────────────────────────────┘
                │ HTTPS + WebSocket
                ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                        FastAPI Backend                               │
-│  Auth/Workers · Premium Engine · Trigger Monitor · Claims · Fraud   │
-└───────────┬──────────────────────┬───────────────────────────────────┘
-            ▼                      ▼                      ▼
-   External APIs            Database Layer           ML Models
-   OpenWeatherMap           SQLite (dev)             XGBoost premium
-   CPCB Safar AQI           PostgreSQL (prod)        Isolation Forest
-   IMD · Google Traffic     Redis (cache)            LSTM risk model
-   Cashfree · Firebase      NetworkX graph           Ollama Llama 3 8B
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                        FastAPI Backend                                        │
+│  Auth/Workers · Premium Engine · Trigger Monitor · Claims · Fraud           │
+│  Analytics · Emergency SOS · Instant Payout · Auto-Claim                    │
+└──────────────┬──────────────────────────┬───────────────────────────────────┘
+               ▼                          ▼                      ▼
+      External APIs                Database Layer           ML Models
+      OpenWeatherMap              SQLite (dev)            XGBoost premium
+      CPCB Safar AQI              PostgreSQL (prod)       Isolation Forest
+      IMD · Traffic              Redis (cache)           LSTM risk model
+      Cashfree · Firebase                                 Ollama Llama 3 8B
 ```
+
+### Background Processing
+- **APScheduler** runs trigger monitoring every 15 minutes
+- **Auto-Claim Service** creates claims from triggered alerts automatically
+- **Notification Service** sends push/SMS alerts for payouts and emergencies
 
 ---
 
-## 🛠️ 10. Tech Stack
+## 🛠️ 12. Tech Stack
 
 ### Backend
 `FastAPI 0.111` · `Python 3.11` · `SQLAlchemy 2.0` · `Alembic` · `SQLite/PostgreSQL` · `Redis` · `XGBoost` · `scikit-learn` · `PyTorch` · `NetworkX` · `Ollama + Llama 3 8B` · `MLflow` · `httpx` · `APScheduler` · `pytest`
@@ -409,7 +425,7 @@ Everything in the stack is MIT/BSD/Apache licensed. Cashfree sandbox for payment
 
 ---
 
-## 📁 11. Project Structure
+## 📁 13. Project Structure
 
 ```
 gig-protector/
@@ -418,18 +434,27 @@ gig-protector/
 │   │   ├── main.py               # FastAPI entry point
 │   │   ├── config.py             # pydantic-settings
 │   │   ├── database.py           # SQLAlchemy engine
+│   │   ├── scheduler.py          # APScheduler background jobs
 │   │   ├── api/
 │   │   │   ├── auth.py           # Register · login · JWT
 │   │   │   ├── workers.py        # Profile · earnings · zone
 │   │   │   ├── premiums.py       # Quote · subscribe · history
 │   │   │   ├── triggers.py       # Active · zone status · history
 │   │   │   ├── claims.py         # Status · payouts · appeals
+│   │   │   ├── dashboard.py      # Worker & admin dashboard analytics
+│   │   │   ├── emergency.py      # SOS system endpoints
+│   │   │   ├── payouts.py        # Instant payout endpoints
 │   │   │   └── admin.py          # Ops · fraud alerts · review queue
 │   │   ├── services/
 │   │   │   ├── premium_engine.py
 │   │   │   ├── trigger_monitor.py
+│   │   │   ├── trigger_automation_service.py  # Automated trigger checking
+│   │   │   ├── auto_claim_service.py           # Auto-create claims
 │   │   │   ├── payout_service.py
+│   │   │   ├── instant_payout.py   # Multi-gateway payout service
 │   │   │   ├── fraud_engine.py
+│   │   │   ├── analytics_service.py # Dashboard analytics
+│   │   │   ├── emergency_service.py # SOS notification service
 │   │   │   ├── weather_service.py
 │   │   │   ├── aqi_service.py
 │   │   │   └── notification_service.py
@@ -438,26 +463,36 @@ gig-protector/
 │   │   │   ├── fraud_model.py
 │   │   │   ├── risk_model.py
 │   │   │   ├── llm_reviewer.py
-│   │   │   └── models/           # .joblib / .onnx files
-│   │   ├── models/               # SQLAlchemy ORM
-│   │   └── schemas/              # Pydantic schemas
-│   ├── tests/
-│   ├── alembic/
-│   ├── requirements.txt
-│   └── .env.example
+│   │   │   └── models/
+│   │   ├── models/
+│   │   │   └── emergency.py     # Emergency event models
+│   │   └── schemas/
+│   │       └── emergency.py     # Emergency Pydantic schemas
+│   └── requirements.txt
 │
 ├── frontend/
 │   └── src/
-│       ├── pages/                # Dashboard · Claims · Triggers · Workers · Analytics
-│       ├── components/           # TriggerMap · ClaimCard · FraudScoreGauge · Charts
-│       ├── services/             # api.js · websocket.js
-│       └── store/                # Zustand slices
+│       ├── pages/
+│       │   ├── Dashboard.jsx
+│       │   ├── Claims.jsx
+│       │   ├── AdminDashboard.jsx
+│       │   ├── AdminClaims.jsx
+│       │   ├── AdminFraud.jsx
+│       │   ├── AdminReports.jsx
+│       │   ├── SafetyDashboard.jsx
+│       │   └── ...
+│       ├── components/
+│       │   ├── Navbar.jsx
+│       │   ├── LoadingScreen.jsx
+│       │   ├── SOSButton.jsx
+│       │   └── ...
+│       └── services/
 │
 ├── mobile/
 │   └── lib/
-│       ├── screens/              # onboarding/ · home/ · claims/ · profile/
-│       ├── services/             # api · location · notifications · payment
-│       └── providers/            # Riverpod state
+│       ├── screens/
+│       ├── services/
+│       └── providers/
 │
 ├── ml_notebooks/
 │   ├── 01_premium_model_training.ipynb
@@ -465,19 +500,14 @@ gig-protector/
 │   ├── 03_zone_risk_lstm.ipynb
 │   └── 04_trigger_backtesting.ipynb
 │
-├── data/
-│   ├── mock/                     # workers · weather_events · zones · claims JSON
-│   └── seeds/seed_dev.py
-│
-├── .env.example
-│
-├── LICENSE
-└── README.md
+└── data/
+    ├── mock/
+    └── seeds/
 ```
 
 ---
 
-## 📅 12. Development Plan
+## 📅 14. Development Plan
 
 | Phase | Weeks | Key Deliverables | Milestone |
 |---|---|---|---|
@@ -490,33 +520,45 @@ gig-protector/
 
 ---
 
-## 📡 13. API Reference
+## 📡 15. API Reference
 
 Base URL: `http://localhost:8000/api/v1` · Swagger: `/docs` · ReDoc: `/redoc`
 
 ```
-AUTH      POST /auth/register · POST /auth/login · POST /auth/refresh
+AUTH         POST /auth/register · POST /auth/login · POST /auth/refresh
 
-WORKERS   GET  /workers/me · PUT /workers/me
-          GET  /workers/me/earnings · GET  /workers/me/coverage
+WORKERS      GET  /workers/me · PUT /workers/me
+             GET  /workers/me/earnings · GET  /workers/me/coverage
 
-PREMIUMS  GET  /premiums/quote · GET  /premiums/tiers
-          POST /premiums/subscribe · GET  /premiums/history
+PREMIUMS     GET  /premiums/quote · GET  /premiums/tiers
+             POST /premiums/subscribe · GET  /premiums/history
 
-TRIGGERS  GET  /triggers/active · GET  /triggers/zone/{zone_id}
-          GET  /triggers/history · WS /triggers/stream
+TRIGGERS     GET  /triggers/active · GET  /triggers/zone/{zone_id}
+             GET  /triggers/history · WS /triggers/stream
 
-CLAIMS    GET  /claims/ · GET  /claims/{id}
-          POST /claims/{id}/appeal
+CLAIMS       GET  /claims/ · GET  /claims/{id}
+             POST /claims/{id}/appeal
 
-ADMIN     GET  /admin/dashboard · GET  /admin/claims/queue
-          POST /admin/claims/{id}/review
-          GET  /admin/fraud/rings · GET  /admin/ml/metrics
+DASHBOARD    GET  /dashboard/worker · GET  /dashboard/admin
+             GET  /dashboard/earnings-protection · GET  /dashboard/coverage-status
+             GET  /dashboard/admin/loss-ratio · GET  /dashboard/admin/predictions
+             GET  /dashboard/admin/weather-forecast · GET  /dashboard/admin/fraud-summary
+
+EMERGENCY    POST /emergency/trigger · GET  /emergency/{id}
+             GET  /emergency/ · PATCH /emergency/{id}/status
+             POST /emergency/{id}/stream · POST /emergency/{id}/cancel
+
+PAYOUTS      POST /payouts/instant · GET  /payouts/options
+             GET  /payouts/status/{id} · GET  /payouts/history
+
+ADMIN        GET  /admin/dashboard · GET  /admin/claims/queue
+             POST /admin/claims/{id}/review
+             GET  /admin/fraud/rings · GET  /admin/ml/metrics
 ```
 
 ---
 
-## ▶️ 14. Running the Project
+## ▶️ 16. Running the Project
 
 ### Backend
 ```bash
@@ -556,7 +598,7 @@ ollama pull llama3:8b && ollama serve
 
 ---
 
-## 🔑 15. Environment Variables
+## 🔑 17. Environment Variables
 
 ```env
 # App
@@ -598,12 +640,12 @@ ALLOWED_ORIGINS=http://localhost:5173
 
 ---
 
-## 🗺️ 16. Roadmap
+## 🗺️ 18. Roadmap
 
 - [x] Architecture design + README
-- [ ] **Phase 0:** Scaffold · Weather API · JWT auth
-- [ ] **Phase 1:** Onboarding · Premium quote · UPI · Push notifications
-- [ ] **Phase 2:** Trigger monitor · Auto-payout · Rules fraud engine
+- [x] **Phase 0:** Scaffold · Weather API · JWT auth
+- [x] **Phase 1:** Onboarding · Premium quote · UPI · Push notifications
+- [x] **Phase 2:** Trigger monitor · Auto-payout · Rules fraud engine
 - [ ] **Phase 3:** XGBoost · Isolation Forest · NetworkX · LSTM · Ollama · MLflow
 - [ ] **Phase 4:** GPS/cell tower delta · Green/Amber/Red routing · Appeals · Spoof tests
 - [ ] **Phase 5:** 6 languages · IRDAI sandbox · DPDPA audit · 3-city pilot · 100 beta workers

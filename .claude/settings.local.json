@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(del gigprotector.db)",
+      "Bash(ls -la *.db)",
+      "Bash(rm:*)"
+    ]
+  }
+}

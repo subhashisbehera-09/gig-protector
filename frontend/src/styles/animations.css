@@ -593,3 +593,55 @@
 .loading-dots span:nth-child(2) {
   animation-delay: -0.16s;
 }
+
+/* ===== PULSE ANIMATION FOR SOS BUTTON ===== */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== LOADING SCREEN EFFECTS ===== */
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.animated-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes loading-bar-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+.animated-loading-bar {
+  animation: loading-bar-slide 1.5s ease-in-out infinite;
+}

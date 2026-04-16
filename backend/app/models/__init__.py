@@ -194,3 +194,7 @@ class AQIData(Base):
     category = Column(String(50))
     pollutant = Column(String(50))
     recorded_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+# Import emergency models to register them with SQLAlchemy
+from app.models.emergency import EmergencyEvent, EmergencyState, TriggerType

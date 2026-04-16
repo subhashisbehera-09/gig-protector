@@ -20,3 +20,9 @@ aiofiles==23.2.1
 # ML Models
 xgboost>=2.0.0
 pandas>=2.0.0
+
+# Emergency/SMS
+twilio>=8.10.0
+
+# Scheduler/Automation
+apscheduler>=3.10.0

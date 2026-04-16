@@ -1,4 +1,4 @@
-const API_BASE_URL = '';
+const API_BASE_URL = 'http://localhost:8000';
 
 let authToken = localStorage.getItem('token');
 
@@ -225,7 +225,96 @@ export const apiService = {
     };
 
     return zoneRisks[zoneId] || zoneRisks.andheri_west;
-  }
+  },
+
+  async getWorkerDashboard() {
+    return fetchWithAuth('/dashboard/worker');
+  },
+
+  async getAdminDashboard() {
+    return fetchWithAuth('/dashboard/admin');
+  },
+
+  async getEarningsProtection() {
+    return fetchWithAuth('/dashboard/earnings-protection');
+  },
+
+  async getCoverageStatus() {
+    return fetchWithAuth('/dashboard/coverage-status');
+  },
+
+  async getLossRatio() {
+    return fetchWithAuth('/dashboard/admin/loss-ratio');
+  },
+
+  async getPredictions() {
+    return fetchWithAuth('/dashboard/admin/predictions');
+  },
+
+  async getWeatherForecast() {
+    return fetchWithAuth('/dashboard/admin/weather-forecast');
+  },
+
+  async getFraudSummary() {
+    return fetchWithAuth('/dashboard/admin/fraud-summary');
+  },
+
+  async initiateInstantPayout(claimId, gateway = 'upi') {
+    return fetchWithAuth('/payouts/instant', {
+      method: 'POST',
+      body: JSON.stringify({ claim_id: claimId, gateway }),
+    });
+  },
+
+  async getPaymentOptions() {
+    return fetchWithAuth('/payouts/options');
+  },
+
+  async getPayoutStatus(payoutId) {
+    return fetchWithAuth(`/payouts/status/${payoutId}`);
+  },
+
+  async getPayoutHistory() {
+    return fetchWithAuth('/payouts/history');
+  },
+
+  async getClaimFraudAnalysis(claimId) {
+    return fetchWithAuth(`/claims/${claimId}/fraud-analysis`);
+  },
+
+  async post(endpoint, data) {
+    return fetchWithAuth(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async patch(endpoint, data) {
+    return fetchWithAuth(endpoint, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async put(endpoint, data) {
+    return fetchWithAuth(endpoint, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  async delete(endpoint) {
+    return fetchWithAuth(endpoint, {
+      method: 'DELETE',
+    });
+  },
 };
 
+export const api = apiService;
 export default apiService;
+
+// For direct access
+export const post = apiService.post.bind(apiService);
+export const patch = apiService.patch.bind(apiService);
+export const put = apiService.put.bind(apiService);
+export const del = apiService.delete.bind(apiService);

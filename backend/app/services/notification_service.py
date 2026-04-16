@@ -3,6 +3,16 @@ from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.models import Notification
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+async def send_sos_alert(incident_id: str, worker_id: str):
+    """Section 1: Alert trigger → first action < 2 seconds"""
+    from app.services.emergency_service import send_sms_fallback, notify_emergency_contacts
+    
+    logger.info(f"SOS_ALERT_TRIGGERED: incident_id={incident_id}, worker_id={worker_id}")
 
 
 async def send_notification(

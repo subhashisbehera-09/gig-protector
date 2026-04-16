@@ -65,13 +65,17 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(User).where(User.email == user_data.email))
+    if len(user_data.password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+    
+    normalized_email = user_data.email.lower()
+    result = await db.execute(select(User).where(User.email == normalized_email))
     if result.scalar_one_or_none():
         raise HTTPException(status_code=400, detail="Email already registered")
     
     hashed_password = get_password_hash(user_data.password)
     user = User(
-        email=user_data.email,
+        email=normalized_email,
         hashed_password=hashed_password,
         full_name=user_data.full_name,
         role=UserRole.WORKER
@@ -84,7 +88,8 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
 
 @router.post("/login", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(User).where(User.email == form_data.username))
+    normalized_email = form_data.username.lower()
+    result = await db.execute(select(User).where(User.email == normalized_email))
     user = result.scalar_one_or_none()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(

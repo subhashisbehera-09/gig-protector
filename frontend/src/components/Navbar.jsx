@@ -5,6 +5,7 @@ import { LogoWithText } from './Logo';
 
 const navItems = [
   { path: '/dashboard', label: 'Dashboard' },
+  { path: '/admin', label: 'Admin' },
   { path: '/register', label: 'Register' },
   { path: '/policy', label: 'Policy' },
   { path: '/premium', label: 'Premium' },

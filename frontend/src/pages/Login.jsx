@@ -192,7 +192,7 @@ export const Login = () => {
     
     try {
       const user = await apiService.register({
-        email: formData.email,
+        email: formData.email.toLowerCase(),
         password: formData.password,
         full_name: formData.name,
       });
@@ -229,7 +229,7 @@ export const Login = () => {
     showToast('Logging in...', 'info');
     
     try {
-      const { access_token } = await apiService.login(formData.loginEmail, formData.loginPassword);
+      const { access_token } = await apiService.login(formData.loginEmail.toLowerCase(), formData.loginPassword);
       const user = await apiService.getMe();
       
       updateState({

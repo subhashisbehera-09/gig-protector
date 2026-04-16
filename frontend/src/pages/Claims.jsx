@@ -17,6 +17,19 @@ const SCENARIOS = [
   { value: 'fraud', label: 'Fraud attempt — GPS spoof detected', color: '#f87171', fraudProb: 0.84 },
 ];
 
+const FRAUD_CHECKS = [
+  { id: 'gps', name: 'GPS Spoofing Detection', desc: 'Haversine distance & cell tower validation' },
+  { id: 'weather', name: 'Weather Claim Verification', desc: 'Historical weather data correlation' },
+  { id: 'pattern', name: 'Pattern Anomaly Detection', desc: 'Claim frequency & amount analysis' },
+  { id: 'ml', name: 'ML Fraud Scoring', desc: 'Isolation Forest + XGBoost ensemble' },
+];
+
+const PAYMENT_GATEWAYS = [
+  { id: 'upi', name: 'UPI Instant', icon: '📱', time: '< 10 sec', recommended: true },
+  { id: 'razorpay', name: 'Razorpay', icon: '💳', time: '< 30 sec', recommended: false },
+  { id: 'stripe', name: 'Stripe', icon: '💰', time: '< 60 sec', recommended: false },
+];
+
 const getScenarioFromML = () => {
   const rand = Math.random();
   if (rand < 0.6) return 'genuine';
@@ -25,21 +38,23 @@ const getScenarioFromML = () => {
 };
 
 const CLAIM_HISTORY = [
-  { id: 'CLM-0041', trigger: 'Heavy Rain — IMD Red Alert', days: 3, payout: 1575, date: 'Mar 15, 2024', status: 'paid', score: 18, route: 'green' },
-  { id: 'CLM-0038', trigger: 'Dense Fog — Visibility 120m', days: 1, payout: 525, date: 'Feb 28, 2024', status: 'paid', score: 12, route: 'green' },
-  { id: 'CLM-0035', trigger: 'Unplanned Bandh', days: 2, payout: 1050, date: 'Feb 10, 2024', status: 'paid', score: 22, route: 'green' },
-  { id: 'CLM-0031', trigger: 'Extreme Heat 45°C', days: 2, payout: 1050, date: 'May 22, 2023', status: 'paid', score: 31, route: 'green' },
-  { id: 'CLM-0028', trigger: 'Heavy Rain — IMD Red Alert', days: 4, payout: 2100, date: 'Jul 4, 2023', status: 'paid', score: 44, route: 'amber' },
+  { id: 'CLM-0041', trigger: 'Heavy Rain — IMD Red Alert', days: 3, payout: 1575, date: 'Mar 15, 2024', status: 'paid', score: 18, route: 'green', gateway: 'UPI' },
+  { id: 'CLM-0038', trigger: 'Dense Fog — Visibility 120m', days: 1, payout: 525, date: 'Feb 28, 2024', status: 'paid', score: 12, route: 'green', gateway: 'UPI' },
+  { id: 'CLM-0035', trigger: 'Unplanned Bandh', days: 2, payout: 1050, date: 'Feb 10, 2024', status: 'paid', score: 22, route: 'green', gateway: 'Razorpay' },
+  { id: 'CLM-0031', trigger: 'Extreme Heat 45°C', days: 2, payout: 1050, date: 'May 22, 2023', status: 'paid', score: 31, route: 'green', gateway: 'Stripe' },
+  { id: 'CLM-0028', trigger: 'Heavy Rain — IMD Red Alert', days: 4, payout: 2100, date: 'Jul 4, 2023', status: 'paid', score: 44, route: 'amber', gateway: 'UPI' },
 ];
 
 export const Claims = () => {
   const { state, showToast } = useApp();
   const [trigger, setTrigger] = useState('rain');
   const [days, setDays] = useState(3);
+  const [selectedGateway, setSelectedGateway] = useState('upi');
   const [mlDetectedScenario, setMlDetectedScenario] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [logs, setLogs] = useState([]);
   const [result, setResult] = useState(null);
+  const [showFraudDetails, setShowFraudDetails] = useState(false);
 
   const runMLDetection = () => {
     const scenario = getScenarioFromML();
@@ -67,19 +82,24 @@ export const Claims = () => {
       { delay: 1400, icon: '📍', text: 'Validating GPS location — Worker in Andheri West zone...', status: 'checking' },
       { delay: 1900, icon: scenario === 'fraud' ? '🚨' : '✅', text: scenario === 'fraud' ? 'ALERT: GPS SPOOF DETECTED! Cell tower delta: 18km (Thane).' : 'Location confirmed. Cell tower delta: 0.8km ✓', status: scenario === 'fraud' ? 'fraud' : 'ok' },
       { delay: 2400, icon: '📊', text: scenario === 'fraud' ? 'Platform anomaly: Earnings logged during claimed disruption' : 'Platform activity: 0 trips in 4hrs ✓', status: scenario === 'fraud' ? 'fraud' : 'ok' },
-      { delay: 2900, icon: '🤖', text: 'Running Isolation Forest fraud model (18 features, 50K training samples)...', status: 'checking' },
-      { delay: 3500, icon: scenario === 'genuine' ? '🟢' : scenario === 'amber' ? '🟡' : '🔴', text: scenario === 'genuine' ? 'Fraud score: 16/100 → GREEN PATH — Auto-approve' : scenario === 'amber' ? 'Fraud score: 52/100 → AMBER PATH — Network degradation detected' : 'Fraud score: 84/100 → RED PATH — GPS spoof confirmed. Claim DENIED.', status: scenario === 'genuine' ? 'ok' : scenario === 'amber' ? 'warn' : 'fraud' },
+      { delay: 2700, icon: '🔍', text: 'Weather verification: Checking historical data correlation...', status: 'checking' },
+      { delay: 3100, icon: '✅', text: scenario === 'fraud' ? 'Weather mismatch: No severe weather in zone at claim time' : 'Weather data verified: 68mm rainfall confirmed ✓', status: scenario === 'fraud' ? 'fraud' : 'ok' },
+      { delay: 3500, icon: '🤖', text: 'Running ML fraud model (Isolation Forest + XGBoost ensemble)...', status: 'checking' },
+      { delay: 4200, icon: scenario === 'genuine' ? '🟢' : scenario === 'amber' ? '🟡' : '🔴', text: scenario === 'genuine' ? 'Fraud score: 16/100 → GREEN PATH — Auto-approve' : scenario === 'amber' ? 'Fraud score: 52/100 → AMBER PATH — Network degradation detected' : 'Fraud score: 84/100 → RED PATH — Multiple fraud indicators. Claim DENIED.', status: scenario === 'genuine' ? 'ok' : scenario === 'amber' ? 'warn' : 'fraud' },
     ];
 
     if (scenario === 'amber') {
-      steps.push({ delay: 4500, icon: '🔄', text: 'Peer zone validation: 14/17 workers show same pattern.', status: 'checking' });
-      steps.push({ delay: 5200, icon: '✅', text: 'Weather Network Discount applied. Fraud score adjusted: 52→28. AUTO-APPROVED.', status: 'ok' });
+      steps.push({ delay: 5000, icon: '🔄', text: 'Peer zone validation: 14/17 workers show same pattern.', status: 'checking' });
+      steps.push({ delay: 5700, icon: '✅', text: 'Weather Network Discount applied. Fraud score adjusted: 52→28. AUTO-APPROVED.', status: 'ok' });
     }
 
+    const gatewayName = PAYMENT_GATEWAYS.find(g => g.id === selectedGateway)?.name || 'UPI';
+    const gatewayTime = PAYMENT_GATEWAYS.find(g => g.id === selectedGateway)?.time || '< 10 sec';
+
     if (scenario !== 'fraud') {
-      steps.push({ delay: scenario === 'amber' ? 5700 : 4000, icon: '💸', text: `Calculating payout: ${coveragePct * 100}% × ₹${state.dailyBaseline} × ${days} days = ₹${calculatedPayout}`, status: 'ok' });
-      steps.push({ delay: scenario === 'amber' ? 6400 : 4600, icon: '🏦', text: `Initiating UPI transfer to ${state.upiId}...`, status: 'ok' });
-      steps.push({ delay: scenario === 'amber' ? 7200 : 5200, icon: '✅', text: `₹${calculatedPayout} credited! SMS + Push notification sent.`, status: 'done' });
+      steps.push({ delay: scenario === 'amber' ? 6200 : 4700, icon: '💸', text: `Calculating payout: ${coveragePct * 100}% × ₹${state.dailyBaseline} × ${days} days = ₹${calculatedPayout}`, status: 'ok' });
+      steps.push({ delay: scenario === 'amber' ? 6800 : 5200, icon: '🏦', text: `Initiating ${gatewayName} transfer to ${state.upiId}...`, status: 'ok' });
+      steps.push({ delay: scenario === 'amber' ? 7600 : 5800, icon: '✅', text: `₹${calculatedPayout} credited via ${gatewayName}! ${gatewayTime} settlement.`, status: 'done' });
     }
 
     let prevDelay = 0;
@@ -260,6 +280,50 @@ export const Claims = () => {
             )}
           </div>
 
+          <div className="form-group">
+            <label>Payment Gateway</label>
+            <div className="gateway-options">
+              {PAYMENT_GATEWAYS.map(gw => (
+                <div
+                  key={gw.id}
+                  className={`gateway-option ${selectedGateway === gw.id ? 'selected' : ''}`}
+                  onClick={() => setSelectedGateway(gw.id)}
+                >
+                  <span className="gateway-icon">{gw.icon}</span>
+                  <div className="gateway-info">
+                    <span className="gateway-name">{gw.name}</span>
+                    <span className="gateway-time">{gw.time}</span>
+                  </div>
+                  {gw.recommended && <span className="badge badge-green">Rec</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <button 
+              className="toggle-details-btn"
+              onClick={() => setShowFraudDetails(!showFraudDetails)}
+            >
+              {showFraudDetails ? '▼ Hide' : '▶'} Fraud Detection Mechanisms
+            </button>
+            {showFraudDetails && (
+              <div className="fraud-details">
+                {FRAUD_CHECKS.map(check => (
+                  <div key={check.id} className="fraud-check-item">
+                    <div className="check-header">
+                      <span className="check-icon">
+                        {check.id === 'gps' ? '📍' : check.id === 'weather' ? '🌤️' : check.id === 'pattern' ? '📊' : '🤖'}
+                      </span>
+                      <span className="check-name">{check.name}</span>
+                    </div>
+                    <p className="check-desc">{check.desc}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           <div className="payout-preview">
             <span className="label">Estimated Payout</span>
             <span className="payout-amount">₹{calculatedPayout}</span>
@@ -295,7 +359,7 @@ export const Claims = () => {
                       <>
                         <div className="result-icon">💸</div>
                         <div className="result-amount">₹{result.payout.toLocaleString()}</div>
-                        <div className="result-label">Credited to UPI</div>
+                        <div className="result-label">Credited via {PAYMENT_GATEWAYS.find(g => g.id === selectedGateway)?.name || 'UPI'}</div>
                         <div className="result-meta">
                           <span className="badge badge-green">✓ {result.route.toUpperCase()} PATH</span>
                           <span className="fs-12 c-text2">Fraud score: {result.fraudScore}/100</span>
@@ -334,16 +398,105 @@ export const Claims = () => {
                   </span>
                 </div>
                 <div className="fs-13 c-text2">{claim.trigger} · {claim.days} day{claim.days > 1 ? 's' : ''}</div>
-                <div className="fs-12 c-text2 mt-4">{claim.date} · Fraud score: {claim.score}/100</div>
+                <div className="fs-12 c-text2 mt-4">{claim.date} · Fraud score: {claim.score}/100 · via {claim.gateway}</div>
               </div>
               <div className="text-right">
                 <div className="value c-green" style={{ fontSize: '20px' }}>₹{claim.payout.toLocaleString()}</div>
-                <div className="fs-12 c-text2">to UPI</div>
+                <div className="fs-12 c-text2">{claim.gateway}</div>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      <style>{`
+        .gateway-options {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-top: 8px;
+        }
+        .gateway-option {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 12px;
+          background: var(--bg-tertiary);
+          border: 1px solid transparent;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .gateway-option:hover {
+          border-color: var(--primary);
+        }
+        .gateway-option.selected {
+          border-color: var(--primary);
+          background: rgba(99, 102, 241, 0.1);
+        }
+        .gateway-icon {
+          font-size: 24px;
+        }
+        .gateway-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        .gateway-name {
+          font-weight: 500;
+        }
+        .gateway-time {
+          font-size: 12px;
+          color: var(--text-secondary);
+        }
+        .toggle-details-btn {
+          background: none;
+          border: none;
+          color: var(--primary);
+          cursor: pointer;
+          font-size: 13px;
+          padding: 8px 0;
+          text-align: left;
+        }
+        .toggle-details-btn:hover {
+          text-decoration: underline;
+        }
+        .fraud-details {
+          background: var(--bg-tertiary);
+          border-radius: 8px;
+          padding: 16px;
+          margin-top: 12px;
+        }
+        .fraud-check-item {
+          padding: 12px 0;
+          border-bottom: 1px solid var(--bg-secondary);
+        }
+        .fraud-check-item:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+        .fraud-check-item:first-child {
+          padding-top: 0;
+        }
+        .check-header {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+        }
+        .check-icon {
+          font-size: 18px;
+        }
+        .check-name {
+          font-weight: 500;
+        }
+        .check-desc {
+          font-size: 12px;
+          color: var(--text-secondary);
+          margin: 0;
+          padding-left: 26px;
+        }
+      `}</style>
     </div>
   );
 };

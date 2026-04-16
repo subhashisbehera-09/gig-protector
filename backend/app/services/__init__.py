@@ -5,3 +5,5 @@ from .fraud_engine import analyze_claim_fraud, create_fraud_alert
 from .weather_service import get_weather_data, get_forecast
 from .aqi_service import get_aqi_data, get_aqi_forecast
 from .notification_service import send_notification, get_user_notifications
+from .trigger_automation_service import run_trigger_check, TriggerAutomationService
+from .auto_claim_service import run_auto_claim_process, AutoClaimService

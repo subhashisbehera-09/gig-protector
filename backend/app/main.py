@@ -3,7 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.database import init_db
-from app.api import auth, workers, premiums, triggers, claims, admin, payments
+from app.api import auth, workers, premiums, triggers, claims, admin, payments, payouts, dashboard, emergency
+from app.scheduler import start_scheduler, stop_scheduler
 
 
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
@@ -12,7 +13,9 @@ MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db()
+    start_scheduler()
     yield
+    stop_scheduler()
 
 
 app = FastAPI(
@@ -37,6 +40,9 @@ app.include_router(triggers.router)
 app.include_router(claims.router)
 app.include_router(admin.router)
 app.include_router(payments.router)
+app.include_router(payouts.router)
+app.include_router(dashboard.router)
+app.include_router(emergency.router)
 
 
 @app.get("/")
@@ -53,3 +59,21 @@ async def health_check():
         "trigger_backtest": os.path.exists(os.path.join(MODEL_DIR, "trigger_backtest.joblib")),
     }
     return {"status": "healthy", "models": models_status}
+
+
+@app.post("/admin/trigger-check")
+async def manual_trigger_check():
+    from app.database import AsyncSessionLocal
+    from app.services.trigger_automation_service import run_trigger_check
+    async with AsyncSessionLocal() as db:
+        result = await run_trigger_check(db)
+    return {"message": "Trigger check completed", "result": result}
+
+
+@app.post("/admin/auto-claim")
+async def manual_auto_claim():
+    from app.database import AsyncSessionLocal
+    from app.services.auto_claim_service import run_auto_claim_process
+    async with AsyncSessionLocal() as db:
+        result = await run_auto_claim_process(db)
+    return {"message": "Auto-claim process completed", "result": result}

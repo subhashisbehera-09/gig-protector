@@ -12,6 +12,12 @@ class Settings(BaseSettings):
     RAZORPAY_KEY_ID: str = ""
     RAZORPAY_KEY_SECRET: str = ""
     RAZORPAY_UPI_ID: str = "merchant@upi"
+    
+    # Twilio SMS/Voice
+    TWILIO_ACCOUNT_SID: str = ""
+    TWILIO_AUTH_TOKEN: str = ""
+    TWILIO_PHONE_NUMBER: str = ""
+    PLATFORM_EMERGENCY_NUMBER: str = "+1234567890"
 
     class Config:
         env_file = ".env"

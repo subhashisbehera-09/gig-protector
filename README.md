@@ -16,6 +16,19 @@
 
 ---
 
+## 🚀 Pitch Deck  
+
+<p align="center">
+  <a href="https://docs.google.com/presentation/d/1Ez_RYBx3z8uk7NlwWnSnnvhLeYVTt5xe/edit?slide=id.p15#slide=id.p15" target="_blank">
+    <img src="https://img.shields.io/badge/View%20Pitch%20Deck-Click%20Here-ff69b4?style=for-the-badge&logo=google-drive&logoColor=white" />
+  </a>
+</p>
+
+<p align="center">
+  📊 A concise overview of <b>GigProtector</b> — problem, solution, architecture, and impact.
+</p>
+
+
 ## 📋 Contents
 1. [Problem](#-1-problem)
 2. [Coverage Scope](#-2-coverage-scope)
